@@ -102,3 +102,17 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# data folders
+test_inputs
+test_lights
+train_inputs
+train_lights
+
+# model files
+models
+
+# outputs
+outputs
+
+# 
