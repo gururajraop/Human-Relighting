@@ -120,9 +120,9 @@ def infer_light_transport_albedo_and_light(img, mask):
         mask3 = cuda.to_gpu(mask3)
         mask9 = cuda.to_gpu(mask9)
 
-    img_batch = chainer.Variable(img[None,:,:,:], volatile=True)
-    mask3_batch = chainer.Variable(mask3[None,:,:,:], volatile=True)
-    mask9_batch = chainer.Variable(mask9[None,:,:,:], volatile=True)
+    img_batch = chainer.Variable(img[None,:,:,:])
+    mask3_batch = chainer.Variable(mask3[None,:,:,:])
+    mask9_batch = chainer.Variable(mask9[None,:,:,:])
     img_batch = mask3_batch * img_batch
 
     res_transport, res_albedo, res_light = m_shared(img_batch)
@@ -395,12 +395,12 @@ for epoch in range(max_epoch):
                 eroded_mask = cuda.to_gpu(eroded_mask)
                 transport = cuda.to_gpu(transport)
             
-            albedo_batch = chainer.Variable(albedo.transpose(2,0,1)[None,:,:,:], volatile=True)
-            erode3_batch = chainer.Variable(eroded_mask[None,:,:].repeat(3,axis=0)[None,:,:,:], volatile=True)
-            erode9_batch = chainer.Variable(eroded_mask[None,:,:].repeat(9,axis=0)[None,:,:,:], volatile=True)
-            mask3_batch = chainer.Variable(mask[None,:,:].repeat(3,axis=0)[None,:,:,:], volatile=True)
-            mask9_batch = chainer.Variable(mask[None,:,:].repeat(9,axis=0)[None,:,:,:], volatile=True)
-            transport_batch = chainer.Variable(transport.transpose(2,0,1)[None,:,:,:], volatile=True)
+            albedo_batch = chainer.Variable(albedo.transpose(2,0,1)[None,:,:,:])
+            erode3_batch = chainer.Variable(eroded_mask[None,:,:].repeat(3,axis=0)[None,:,:,:])
+            erode9_batch = chainer.Variable(eroded_mask[None,:,:].repeat(9,axis=0)[None,:,:,:])
+            mask3_batch = chainer.Variable(mask[None,:,:].repeat(3,axis=0)[None,:,:,:])
+            mask9_batch = chainer.Variable(mask[None,:,:].repeat(9,axis=0)[None,:,:,:])
+            transport_batch = chainer.Variable(transport.transpose(2,0,1)[None,:,:,:])
 
             transport_reshaped_batch = F.transpose(transport_batch, axes=(0,2,3,1))
             transport_reshaped_batch = F.reshape(transport_reshaped_batch, (-1, 9))
@@ -414,17 +414,17 @@ for epoch in range(max_epoch):
             for bj in range(N_test_light):
                 for j in perm_test_light[bj:bj+1]:
                     light = test_lights[j]
-                    light_batch = chainer.Variable(xp.array(light), volatile=True)
+                    light_batch = chainer.Variable(xp.array(light))
  
                     shading = xp.matmul(transport, light)
                     shading = xp.clip(shading, 0., 10.)
-                    shading_batch = chainer.Variable(shading.transpose(2,0,1)[None,:,:,:], volatile=True)
+                    shading_batch = chainer.Variable(shading.transpose(2,0,1)[None,:,:,:])
  
                     rendering = albedo * shading
-                    rendering_batch = chainer.Variable(rendering.transpose(2,0,1)[None,:,:,:], volatile=True)
+                    rendering_batch = chainer.Variable(rendering.transpose(2,0,1)[None,:,:,:])
  
                     img = 2.*rendering-1.
-                    img_batch = chainer.Variable(img.transpose(2,0,1)[None,:,:,:], volatile=True)
+                    img_batch = chainer.Variable(img.transpose(2,0,1)[None,:,:,:])
                     img_batch = mask3_batch * img_batch
  
                     transport_hat, albedo_hat, light_hat = m_shared(img_batch)
