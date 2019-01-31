@@ -114,5 +114,7 @@ models
 
 # outputs
 outputs
+photo_outputs
+relighting_outputs
 
 # 
