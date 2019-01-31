@@ -2,7 +2,6 @@ import chainer
 from chainer import cuda
 import chainer.functions as F
 import chainer.links as L
-from chainer.functions import caffe
 from chainer import Variable, optimizers
 from chainer.functions.evaluation import accuracy
 from chainer.functions.loss import mean_squared_error
